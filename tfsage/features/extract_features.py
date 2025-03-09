@@ -16,7 +16,7 @@ def extract_region_names(region_set: genome_tools.RegionSet) -> List[str]:
 
 
 def _extract_features(
-    bed_file: str, gene_loc_set: genome_tools.RegionSet, decay: float = 10000
+    bed_file: str, gene_loc_set: genome_tools.RegionSet, decay: float = 10_000
 ) -> np.ndarray:
     if is_empty_file(bed_file):
         return np.zeros(len(gene_loc_set.regions))
