@@ -5,6 +5,10 @@ import pandas as pd
 from lisa.core import data_interface, genome_tools
 from .prepare_assets import prepare_region_set
 
+genome_tools.Region.slop = lambda self, d, genome: genome_tools.Region(
+    self.chromosome, max(0, self.start - d), self.end + d
+)
+
 
 def is_empty_file(file: str) -> bool:
     return os.stat(file).st_size == 0
