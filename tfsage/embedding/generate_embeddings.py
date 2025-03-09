@@ -6,7 +6,7 @@ import tempfile
 import os
 
 
-def generate_seurat_embeddings(
+def run_seurat_integration(
     rp_matrix: str,
     metadata: str,
     output_dir: str,
@@ -44,7 +44,7 @@ def generate_seurat_embeddings(
     subprocess.run(cmd, check=True)
 
 
-def generate_seurat_embeddings_wrapper(
+def generate_embeddings(
     rp_matrix_df: pd.DataFrame,
     metadata_df: pd.DataFrame,
     align_key: str = "Assay",
@@ -65,22 +65,27 @@ def generate_seurat_embeddings_wrapper(
     with tempfile.TemporaryDirectory() as temp_dir:
         rp_matrix_path = os.path.join(temp_dir, "rp_matrix.parquet")
         metadata_path = os.path.join(temp_dir, "metadata.parquet")
-        output_dir = os.path.join(temp_dir, "output")
+
+        # Remove index name
+        rp_matrix_df.index.name = None
+        metadata_df.index.name = None
 
         # Save the RP matrix and metadata as Parquet files
         rp_matrix_df.to_parquet(rp_matrix_path)
         metadata_df.to_parquet(metadata_path)
 
         # Generate embeddings
-        generate_seurat_embeddings(
+        run_seurat_integration(
             rp_matrix=rp_matrix_path,
             metadata=metadata_path,
-            output_dir=output_dir,
+            output_dir=temp_dir,
             align_key=align_key,
             methods=[method],
         )
 
         # Read and return the resulting embedding matrix
-        embedding_matrix_path = os.path.join(output_dir, "embedding_matrix.parquet")
-        embedding_df = pd.read_parquet(embedding_matrix_path)
+        embeddings_path = os.path.join(temp_dir, f"{method}.parquet")
+        embedding_df = pd.read_parquet(embeddings_path)
+        embedding_df.set_index("__index_level_0__", inplace=True)
+        embedding_df.index.name = None
         return embedding_df

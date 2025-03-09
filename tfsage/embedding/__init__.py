@@ -1,1 +1,1 @@
-from .generate_seurat_embeddings import generate_seurat_embeddings
+from .generate_embeddings import run_seurat_integration, generate_embeddings
