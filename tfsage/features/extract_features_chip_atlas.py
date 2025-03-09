@@ -18,7 +18,7 @@ def initializer(gene_loc_set: genome_tools.RegionSet) -> None:
     _gene_loc_set = gene_loc_set  # Each worker gets its own copy
 
 
-def _extract_features_rg(
+def _extract_features_ripgrep(
     bed_file: str, name: str, stdout: IO, decay_factor: float = 10_000
 ) -> np.ndarray:
     subprocess.run(["rg", "-N", name, bed_file], stdout=stdout, check=True)
@@ -45,7 +45,7 @@ def process_bed_file_for_name(
         with (
             open(data_path, "w") if data_path else tempfile.NamedTemporaryFile()
         ) as stdout:
-            features = _extract_features_rg(bed_file, name, stdout, decay_factor)
+            features = _extract_features_ripgrep(bed_file, name, stdout, decay_factor)
     return features
 
 
