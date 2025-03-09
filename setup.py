@@ -8,7 +8,6 @@ setup(
     include_package_data=True,
     package_data={
         "tfsage": ["assets/*"],
-        "tfsage.embedding": ["seurat_integration.R"],
     },
 )
 
