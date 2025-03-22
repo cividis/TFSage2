@@ -59,6 +59,7 @@ def extract_features_chip_atlas(
 ) -> pd.DataFrame:
     """
     Compute RP scores for a batch of individual names from a merged BED file in parallel.
+    This uses the ripgrep tool to search for individual names in the merged BED file.
 
     Parameters:
         bed_file (str): Path to the merged BED file.
