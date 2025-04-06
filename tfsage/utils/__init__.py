@@ -3,3 +3,4 @@ from .stratified_sample import stratified_sample
 from .intersect_predictions_with_test_set import intersect_predictions_with_test_set
 from .sanitize_scores import sanitize_scores
 from .compute_classification_metrics import compute_classification_metrics
+from .closest_features import closest_features, load_features_bed
