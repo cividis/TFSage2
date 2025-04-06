@@ -84,7 +84,7 @@ def closest_features(
 
     # Perform the closest feature search and process the results
     df = (
-        peaks_bed.closest(features_bed, D="a", k=k)
+        peaks_bed.closest(features_bed, D="ref", k=k)
         .to_dataframe(disable_auto_names=True, names=column_names)
         .filter(["a_0", "a_1", "a_2", "b_3", "distance"], axis=1)
         .rename(
