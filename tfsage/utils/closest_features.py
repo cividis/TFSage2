@@ -77,8 +77,8 @@ def closest_features(
 
     # Define column names for the resulting DataFrame
     column_names = [
-        *[f"a_{i}" for i in range(peaks_bed.field_count())],
-        *[f"b_{i}" for i in range(features_bed.field_count())],
+        *[f"a_{i}" for i in range(peaks_bed.field_count(1))],
+        *[f"b_{i}" for i in range(features_bed.field_count(1))],
         "distance",
     ]
 
