@@ -3,6 +3,26 @@ import pybedtools
 from importlib import resources
 from typing import Literal
 from lisa.core import genome_tools
+import contextlib
+import os
+import sys
+import warnings
+
+
+@contextlib.contextmanager
+def suppress_output():
+    with open(os.devnull, "w") as devnull:
+        old_stdout = sys.stdout
+        old_stderr = sys.stderr
+        sys.stdout = devnull
+        sys.stderr = devnull
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            try:
+                yield
+            finally:
+                sys.stdout = old_stdout
+                sys.stderr = old_stderr
 
 
 def load_features_bed(
@@ -34,6 +54,14 @@ def load_features_bed(
 
     features_bed = pybedtools.BedTool(bed_file).sort()
     return features_bed
+
+
+def field_count(bed: pybedtools.BedTool) -> int:
+    try:
+        field_count = bed.field_count(1)
+    except OverflowError:
+        field_count = bed.to_dataframe(disable_auto_names=True).shape[1]
+    return field_count
 
 
 def closest_features(
@@ -77,15 +105,17 @@ def closest_features(
 
     # Define column names for the resulting DataFrame
     column_names = [
-        *[f"a_{i}" for i in range(peaks_bed.field_count(1))],
-        *[f"b_{i}" for i in range(features_bed.field_count(1))],
+        *[f"a_{i}" for i in range(field_count(peaks_bed))],
+        *[f"b_{i}" for i in range(field_count(features_bed))],
         "distance",
     ]
 
     # Perform the closest feature search and process the results
+    with suppress_output():
+        res = peaks_bed.closest(features_bed, D="ref", k=k)
+
     df = (
-        peaks_bed.closest(features_bed, D="ref", k=k)
-        .to_dataframe(disable_auto_names=True, names=column_names)
+        res.to_dataframe(disable_auto_names=True, names=column_names)
         .filter(["a_0", "a_1", "a_2", "b_3", "distance"], axis=1)
         .rename(
             {
