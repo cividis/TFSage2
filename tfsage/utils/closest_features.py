@@ -26,14 +26,14 @@ def suppress_output():
 
 
 def load_features_bed(
-    genome: Literal["hg38", "mm10"], bed_file: str | None = None
+    genome: Literal["hg38", "mm10"] = "hg38", bed_file: str | None = None
 ) -> genome_tools.RegionSet:
     """
     Load a BED file containing genomic features for a specified genome.
 
     Args:
-        genome (Literal["hg38", "mm10"]): The genome version to load features for.
-            Supported values are "hg38" (human) and "mm10" (mouse).
+        genome (Literal["hg38", "mm10"], optional): The genome version to load features for.
+            Supported values are "hg38" (human) and "mm10" (mouse). Defaults to "hg38".
         bed_file (str | None, optional): Path to a custom BED file. If None, the default
             BED file for the specified genome will be used. Defaults to None.
 

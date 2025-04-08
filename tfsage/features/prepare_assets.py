@@ -43,12 +43,12 @@ def prepare_region_set(
     return region_set
 
 
-def load_region_set(genome: Literal["hg38", "mm10"]) -> genome_tools.RegionSet:
+def load_region_set(genome: Literal["hg38", "mm10"] = "hg38") -> genome_tools.RegionSet:
     """
     Load a RegionSet object for a specified genome.
 
     Parameters:
-        genome (Literal["hg38", "mm10"]): The genome version to load (e.g., "hg38" or "mm10").
+        genome (Literal["hg38", "mm10"], optional): The genome version to load (e.g., "hg38" or "mm10"). Default is "hg38".
 
     Returns:
         genome_tools.RegionSet: A RegionSet object for the specified genome.
