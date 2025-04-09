@@ -13,15 +13,22 @@ def multiintersect(bed_files: List[str]) -> pybedtools.BedTool:
 def merge_nearby_peaks(
     result: pybedtools.BedTool, n: int, merge_distance: int = 0
 ) -> pybedtools.BedTool:
-    c = ",".join([str(i + 6) for i in range(n)])
-    result = result.merge(c=c, o="max", d=merge_distance)
+    if len(result):
+        c = ",".join([str(i + 6) for i in range(n)])
+        result = result.merge(c=c, o="max", d=merge_distance)
     return result
 
 
 def bedtool_to_dataframe(result: pybedtools.BedTool, n: int) -> pd.DataFrame:
-    columns = ["chrom", "start", "end"]
-    columns = columns + [f"file_{i}" for i in range(n)]
-    df = result.to_dataframe(disable_auto_names=True, names=columns)
+    base_cols = ["chrom", "start", "end"]
+    column_names = base_cols + [f"file_{i}" for i in range(n)]
+
+    df = result.to_dataframe(disable_auto_names=True)
+    if df.empty:
+        df = pd.DataFrame(columns=column_names)
+    else:
+        df.columns = column_names
+
     return df
 
 
